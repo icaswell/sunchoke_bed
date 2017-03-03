@@ -10,7 +10,7 @@ Implementation note: since fragments of messages are randomly distributed throug
 
 
 ## How to Encrypt
-1. In 'input.txt', write a keys and their messages. The syntax is that of a Python dictionary:
+1. In 'input.txt', write a map of keys to their messages. The syntax is that of a Python dictionary:
 	```python
 	    {
 	        'key': """message""",
