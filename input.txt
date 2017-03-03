@@ -1,0 +1,126 @@
+{
+        'password': 'srsly try something harder',
+        'PASSWORD': "ok that's good",
+        'hey siri': "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन। मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥",
+        'hi': 'hello',
+        'Hi': 'HELLO',
+        'conjugate yourself': '''Ein Werwolf eines Nachts entwich
+von Weib und Kind und sich begab
+an eines Dorfschullehrers Grab
+und bat ihn: »Bitte, beuge mich!«
+
+Der Dorfschulmeister stieg hinauf
+auf seines Blechschilds Messingknauf
+und sprach zum Wolf, der seine Pfoten
+geduldig kreuzte vor dem Toten:
+
+»Der Werwolf,« sprach der gute Mann,
+»des Weswolfs, Genitiv sodann,
+dem Wemwolf, Dativ, wie mans nennt,
+den Wenwolf, - damit hats ein End.«
+
+Dem Werwolf schmeichelten die Fälle,
+er rollte seine Augenbälle.
+»Indessen,« bat er, »füge doch
+zur Einzahl auch die Mehrzahl noch!«
+
+Der Dorfschulmeister aber mußte
+gestehn, daß er von ihr nichts wußte.
+Zwar Wölfe gäbs in großer Schar,
+doch "Wer" gäbs nur im Singular.
+
+Der Wolf erhob sich tränenblind -
+er hatte ja doch Weib und Kind!!
+Doch da er kein Gelehrter eben,
+so schied er dankend und ergeben.''',
+        'show yourself': '''# sunchoke_bed.py
+#
+# @author: Isaac Caswell
+# @date: 3/3/2017
+#
+# Interface for deniable encryption system.
+#
+# Usage:
+#   $ python sunchoke_bed.py encrypt --size_constraint 1024
+#
+# Please read README.txt for further description and usage notes.
+
+import argparse
+
+from core import encrypt_all_messages, decrypt_message
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('mode', type=str, help="either `encrypt` or `decrypt`", choices=['encrypt', 'decrypt'])
+    parser.add_argument('--password', type=str, help="password for decryption.  Only use when in mode `decrypt`.", default=None)
+    parser.add_argument('--size_constraint', type=int, help="Total bytes in output.  Only use when in mode `encrypt`.", default=None)
+    parser.add_argument('--messages_file', type=str, help="file containing keys and messages to be encrypted. "
+        "Use only with mode `encrypt`.", default="input.txt")
+    parser.add_argument('--encrypted_file', type=str, help="file into which to dump the encrypted output "
+        "if mode is `encrypt`, and otherwise the file with the message.", default="output.txt")
+
+    args = parser.parse_args()
+    if args.mode == 'decrypt' and args.password is None:
+        raise ValueError("need a password to decrypt")
+    if args.mode == 'decrypt' and args.size_constraint is not None:
+        raise ValueError("Don't need a size constraint to decrypt")
+    if args.password is not None and args.mode == 'encrypt':
+        raise ValueError("The pass-sword for encryption should be in your input file. Are you confused?")
+    return args
+
+args = parse_args()
+
+
+if args.mode == 'encrypt':
+    #-------------------------------------------------------------------------------
+    # Read in and encrypt data
+    with open(args.messages_file, 'r') as f:
+        data = f.read()
+        messages = eval(data)
+
+    ciphertext = encrypt_all_messages(messages, args.size_constraint)
+
+    #-------------------------------------------------------------------------------
+    # check to make passwords are long enough
+    for key in messages:
+        if len(key) < 8:
+            print "WARNING: password '%s' too short!"%key
+
+    #-------------------------------------------------------------------------------
+    # check to make sure that the header size is appropriate
+
+    prob_header_randomly_occurs = lambda n, k: 1 - (1- ((9.0/256)*(256**-k)))**(n/16 - k)
+    p = prob_header_randomly_occurs(len(cyphertext), len(HEADER_PREFIX))
+    if p > 1e-3:
+        print "WARNING: there is a probability of %s that there will be some corruption of your data."%p\
+            "  Please try decrypting your message to make sure it works."
+
+    #-------------------------------------------------------------------------------
+    # write data
+    with open(args.encrypted_file, 'w') as f:
+        f.write(ciphertext)
+
+elif args.mode == 'decrypt':
+    with open(args.encrypted_file, 'r') as f:
+        ciphertext = f.read()
+    plaintext = decrypt_message(args.password, ciphertext)
+    print plaintext
+
+else:
+    raise ValueError("inexplicable error")
+
+''',
+'cats': '''
+                      /^--^\     /^--^\     /^--^\                       
+                      \____/     \____/     \____/                       
+                     /      \   /      \   /      \                      
+                    |        | |        | |        |                     
+                     \__  __/   \__  __/   \__  __/                      
+|^|^|^|^|^|^|^|^|^|^|^|^\ \^|^|^|^/ /^|^|^|^|^\ \^|^|^|^|^|^|^|^|^|^|^|^|
+| | | | | | | | | | | | |\ \| | |/ /| | | | | | \ \ | | | | | | | | | | |
+########################/ /######\ \###########/ /#######################
+| | | | | | | | | | | | \/| | | | \/| | | | | |\/ | | | | | | | | | | | |
+|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|
+''',
+
+    }
