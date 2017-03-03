@@ -27,6 +27,7 @@ Implementation note: since fragments of messages are randomly distributed throug
     If you are not used to the command line it can seem baffling and scary. Although it is these things, for the purposes of this package, it is very simple. The only part you might have difficulties with is finding out how to do the above command, which anyone with command line experience could tell you in about five seconds.
 
 3. Run the following command:
+
         $ python sunchoke_bed.py encrypt
 
     Your message will be somewhere between two and four times length of your original message (see `fragment._add_chaff()`). Now, if you want to make sure that the message is a particular size, run it with the `--size_constraint` parameter. For instance, if you want your message to be exactly one kilobyte:
